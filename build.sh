@@ -4,20 +4,15 @@ set -ouex pipefail
 
 RELEASE="$(rpm -E %fedora)"
 
+# import gpg keys
+find /tmp/keys -type f -print0 | xargs -0 -I {} rpm --import {}
 
-### Install packages
+# get any rpm installers we need
+curl -L -o /tmp/protonvpn-repo.rpm https://repo.protonvpn.com/fedora-${RELEASE}-stable/protonvpn-stable-release/protonvpn-stable-release-1.0.1-2.noarch.rpm
+curl -L -o /tmp/veracrypt.rpm https://launchpad.net/veracrypt/trunk/1.26.7/+download/veracrypt-1.26.7-CentOS-8-x86_64.rpm
 
-# Packages can be installed from any enabled yum repo on the image.
-# RPMfusion repos are available by default in ublue main images
-# List of rpmfusion packages can be found here:
-# https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/39/x86_64/repoview/index.html&protocol=https&redirect=1
+# install our rpm packages
+rpm-ostree install /tmp/protonvpn-repo.rpm /tmp/veracrypt.rpm
 
-# this installs a package from fedora repos
-rpm-ostree install screen
-
-# this would install a package from rpmfusion
-# rpm-ostree install vlc
-
-#### Example for enabling a System Unit File
-
-#systemctl enable podman.socket
+# install protonvpn app indicator support
+rpm-ostree install --idempotent proton-vpn-gnome-desktop libappindicator-gtk3 gnome-shell-extension-appindicator gnome-extensions-app
