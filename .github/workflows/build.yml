@@ -49,6 +49,9 @@ jobs:
           COMMIT_TAGS+=("pr-${{ github.event.number }}")
           COMMIT_TAGS+=("${SHA_SHORT}")
 
+          # Define a list of acceptable branches
+          declare -a ACCEPTABLE_BRANCHES=("main" "laptop-nvidia")
+          
           # Append matching timestamp tags to keep a version history
           for TAG in "${BUILD_TAGS[@]}"; do
               BUILD_TAGS+=("${TAG}-${TIMESTAMP}")
@@ -56,6 +59,12 @@ jobs:
 
           BUILD_TAGS+=("${TIMESTAMP}")
           BUILD_TAGS+=("latest")
+
+          # Include branch name in tags if the branch is protected
+          # so we can rebase images on particular branches
+          if [ "$BRANCH_PROTECTED" == "true" ]; then
+              BUILD_TAGS+=("${{ github.ref_name }}")  # Direct branch name tag
+          fi
 
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
               echo "Generated the following commit tags: "
@@ -65,6 +74,15 @@ jobs:
 
               alias_tags=("${COMMIT_TAGS[@]}")
           else
+              # Check if the current branch is in the acceptable list
+              # Add it to the list of build tags, if so
+              for BRANCH in "${ACCEPTABLE_BRANCHES[@]}"; do
+                if [[ "${{ github.ref_name }}" == "$BRANCH" ]]; then
+                  BUILD_TAGS+=("${BRANCH}")
+                  break
+                fi
+              done
+  
               alias_tags=("${BUILD_TAGS[@]}")
           fi
 
