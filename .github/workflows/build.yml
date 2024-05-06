@@ -34,6 +34,29 @@ jobs:
       # Checkout push-to-registry action GitHub repository
       - name: Checkout Push to Registry action
         uses: actions/checkout@v4
+      
+      - name: Check if branch is protected
+        id: check-branch-protection
+        env:
+          GH_TOKEN: ${{ secrets.BRANCH_PROTECTION_PAT }}
+        shell: bash
+        run: |
+          # Try to fetch branch protection details and capture both stdout and exit status
+          PROTECTION_JSON=$(gh api repos/${{ github.repository }}/branches/${{ github.ref_name }}/protection --silent -H "Authorization: token $GH_TOKEN" || echo "{}")
+
+          # Check if the API call was successful
+          if [ $? -eq 0 ]; then
+            # If API call was successful, parse the JSON to check for the specific protection rule
+            PROTECTION_ACTIVE=$(echo "$PROTECTION_JSON" | jq -r '.rules[]? | select(.title == "Protected branches" and .enabled == true) | .enabled')
+            if [[ "$PROTECTION_ACTIVE" == "true" ]]; then
+              echo "branch_protected=true" >> $GITHUB_ENV
+            else
+              echo "branch_protected=false" >> $GITHUB_ENV
+            fi
+          else
+            # If the API call failed (branch does not exist or no protection), assume not protected
+            echo "branch_protected=false" >> $GITHUB_ENV
+          fi
 
       - name: Generate tags
         id: generate-tags
@@ -56,6 +79,12 @@ jobs:
 
           BUILD_TAGS+=("${TIMESTAMP}")
           BUILD_TAGS+=("latest")
+
+          # Include branch name in tags if the branch is protected
+          # so we can rebase images on particular branches
+          if [ "$BRANCH_PROTECTED" == "true" ]; then
+              BUILD_TAGS+=("${{ github.ref_name }}")  # Direct branch name tag
+          fi
 
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
               echo "Generated the following commit tags: "
