@@ -4,6 +4,9 @@ set -ouex pipefail
 
 RELEASE="$(rpm -E %fedora)"
 
+# import custom justfile into 60-custom.just
+cat /tmp/just/60-custom.just >> /usr/share/ublue-os/just/60-custom.just
+
 # import gpg keys
 find /tmp/keys -type f -print0 | xargs -0 -I {} rpm --import {}
 
