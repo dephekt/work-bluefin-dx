@@ -33,3 +33,16 @@ rpm-ostree install --idempotent \
     sqlite-devel \
     tk-devel \
     zlib-devel
+
+# platform desktop host dependencies
+#   testbed poetry build requirements
+#   git-annex is required for managing the release archive
+
+#   note: runtime testbed dependencies are installed in a pet (distrobox) container,
+#   these are just for setting up the local poetry environment for testbed which gets
+#   mounted into the testbed pet container
+rpm-ostree install --idempotent \
+    git-annex \
+    lzo-devel \
+    python3-devel \
+    systemd-devel
