@@ -57,3 +57,29 @@ setup-scdaemon-gpgcard ACTION="":
 
         echo "Lines removed from $config_file"
     fi
+
+# Setup poetry
+alias poetry := setup-poetry
+
+setup-poetry ACTION="":
+    #!/usr/bin/env bash
+    # For now this just supports a naive install/uninstall action without customization
+
+    # Prompt the user for an action if not provided
+    if [ -z "{{ACTION}}" ]; then
+        read -p "Do you want to 'install' or 'uninstall' poetry? (Type 'install' or uninstall'): " ACTION
+    fi
+
+    # Ensure valid input
+    if [ "${ACTION}" != "install" ] && [ "${ACTION}" != "uninstall" ]; then
+        echo "Invalid choice. Please specify 'install' or 'uninstall'."
+        exit 1
+    fi
+
+    if [ "${ACTION}" == "install" ]; then
+        echo "Trying to install poetry to your home directory..."
+        curl -sSL https://install.python-poetry.org | python3 -
+    elif [ "${ACTION}" == "uninstall" ]; then
+        echo "Removing poetry..."
+        curl -sSL https://install.python-poetry.org | python3 - --uninstall
+    fi
