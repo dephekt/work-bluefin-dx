@@ -19,3 +19,17 @@ rpm-ostree install /tmp/protonvpn-repo.rpm /tmp/veracrypt.rpm
 
 # install protonvpn app indicator support
 rpm-ostree install --idempotent proton-vpn-gnome-desktop libappindicator-gtk3 gnome-shell-extension-appindicator gnome-extensions-app
+
+# pyenv: install python build dependencies
+# `patch` is needed to build python 2.7.18, it pulls in `ed` also
+rpm-ostree install --idempotent \
+    bzip2-devel \
+    libffi-devel \
+    lzma-sdk-devel \
+    ncurses-devel \
+    openssl-devel \
+    patch \
+    readline-devel \
+    sqlite-devel \
+    tk-devel \
+    zlib-devel
