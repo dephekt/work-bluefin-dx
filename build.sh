@@ -50,3 +50,12 @@ rpm-ostree install --idempotent \
     lzo-devel \
     python3-devel \
     systemd-devel
+
+# unpack the sentinelagent.rpm
+
+# patch the preinst script as necessary to unbreak the install
+
+# repack the sentinelagent.rpm
+
+# install sentinel agent
+# rpm-ostree install /tmp/rpm/sentinelagent.rpm
