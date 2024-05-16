@@ -51,6 +51,8 @@ COPY keys/ /tmp/keys/
 
 COPY just /tmp/just/
 
+COPY rpms /tmp/rpms/
+
 COPY build.sh /tmp/build.sh
 
 RUN mkdir -p /var/lib/alternatives && \

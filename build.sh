@@ -15,7 +15,7 @@ curl -L -o /tmp/protonvpn-repo.rpm https://repo.protonvpn.com/fedora-${RELEASE}-
 curl -L -o /tmp/veracrypt.rpm https://launchpad.net/veracrypt/trunk/1.26.7/+download/veracrypt-1.26.7-CentOS-8-x86_64.rpm
 
 # install our rpm packages
-rpm-ostree install /tmp/protonvpn-repo.rpm /tmp/veracrypt.rpm
+rpm-ostree install /tmp/protonvpn-repo.rpm /tmp/veracrypt.rpm /tmp/rpms/ProtonMail-desktop-beta.rpm
 
 # install protonvpn app indicator support
 rpm-ostree install --idempotent \
