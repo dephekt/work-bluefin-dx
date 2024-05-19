@@ -47,9 +47,11 @@ rpm-ostree install --idempotent \
 #   mounted into the testbed pet container
 rpm-ostree install --idempotent \
     git-annex \
+    golang \
+    librbd-devel \
     lzo-devel \
     python3-devel \
     systemd-devel
 
 # git lfs needed for my personal projects and i like diff-so-fancy because I'm a fancy boy
-rpm-ostree install --idempotent git-lfs diff-so-fancy golang librbd-devel
+rpm-ostree install --idempotent git-lfs diff-so-fancy
