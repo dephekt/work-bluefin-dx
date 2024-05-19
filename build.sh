@@ -52,4 +52,4 @@ rpm-ostree install --idempotent \
     systemd-devel
 
 # git lfs needed for my personal projects and i like diff-so-fancy because I'm a fancy boy
-rpm-ostree install --idempotent git-lfs diff-so-fancy
+rpm-ostree install --idempotent git-lfs diff-so-fancy golang
