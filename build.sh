@@ -7,6 +7,10 @@ RELEASE="$(rpm -E %fedora)"
 # import custom justfile into 60-custom.just
 cat /tmp/just/60-custom.just >> /usr/share/ublue-os/just/60-custom.just
 
+# enable rpmfusion repos during build
+sed -i '0,/enabled=0/s//enabled=1/' /etc/yum.repos.d/rpmfusion-{,non}free.repo
+sed -i '0,/enabled=0/s//enabled=1/' /etc/yum.repos.d/rpmfusion-{,non}free-updates.repo
+
 # import gpg keys
 find /tmp/keys -type f -print0 | xargs -0 -I {} rpm --import {}
 
@@ -44,7 +48,7 @@ rpm-ostree install --idempotent \
 
 #   note: runtime testbed dependencies are installed in a pet (distrobox) container,
 #   these are just for setting up the local poetry environment for testbed which gets
-#   mounted into the testbed pet container
+#   mounted into the testbed pet container.
 rpm-ostree install --idempotent \
     git-annex \
     golang \
@@ -53,5 +57,12 @@ rpm-ostree install --idempotent \
     python3-devel \
     systemd-devel
 
+# virtualbox is used to run testbed
+rpm-ostree install --idempotent VirtualBox virtualbox-guest-additions
+
 # git lfs needed for my personal projects and i like diff-so-fancy because I'm a fancy boy
 rpm-ostree install --idempotent git-lfs diff-so-fancy
+
+# disable rpmfusion repos after build
+sed -i '0,/enabled=1/s//enabled=0/' /etc/yum.repos.d/rpmfusion-{,non}free.repo
+sed -i '0,/enabled=1/s//enabled=0/' /etc/yum.repos.d/rpmfusion-{,non}free-updates.repo
