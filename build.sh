@@ -58,4 +58,6 @@ rpm-ostree install --idempotent \
 # repack the sentinelagent.rpm
 
 # install sentinel agent
-# rpm-ostree install /tmp/rpm/sentinelagent.rpm
+rpm-ostree install /tmp/rpm/sentinelagent.rpm
+# rpm-ostree install --force-replacefiles /tmp/rpm/sentinelagent.rpm
+# rpm-ostree override replace /tmp/rpm/sentinelagent.rpm

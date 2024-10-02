@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - laptop-nvidia
+      - mr/sentinel-agent
   schedule:
     - cron: '05 10 * * *'  # 10:05am UTC everyday
   push:
